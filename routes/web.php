@@ -14,14 +14,23 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('admin.home');
+})->name('index');
+
+
 Route::middleware('auth')
     ->namespace('Admin')
     ->name('admin.')
     ->prefix('admin')
     ->group(function () {
         Route::get('/', 'HomeController@index')
-            ->name('home');
+            ->name('index');
+        Route::resource('posts', 'PostController');
     });
 Auth::routes();
+
+
+// va messa alla fine (il file viene letto dall alto al basso), -> quando si verificano rotte non sopra delineate any-> prende qualsiasi parametro dopo lo /
+Route::get('{any?}', function () {
+    return view('guests.home');
+})->where('any', '.*');
