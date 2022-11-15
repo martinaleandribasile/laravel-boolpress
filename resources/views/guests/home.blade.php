@@ -17,7 +17,7 @@
 <body>
     <!-- pagina home guests-->
     <div id="root">
-        home in guest
+
     </div>
 </body>
 

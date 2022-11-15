@@ -26,11 +26,12 @@ Route::middleware('auth')
         Route::get('/', 'HomeController@index')
             ->name('index');
         Route::resource('posts', 'PostController');
+        Route::resource('categories', 'CategoryController');
     });
 Auth::routes();
 
 
 // va messa alla fine (il file viene letto dall alto al basso), -> quando si verificano rotte non sopra delineate any-> prende qualsiasi parametro dopo lo /
 Route::get('{any?}', function () {
-    return view('guests.home');
+    return redirect()->route('index');
 })->where('any', '.*');

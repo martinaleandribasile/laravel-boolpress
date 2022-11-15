@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Post;
+use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
@@ -28,7 +29,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**
@@ -39,10 +41,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|max:255|min:5',
-            'content' => 'required|min:5'
-        ]);
+        $this->validationInput($request);
         $datas = $request->all();
         $newpost = new Post();
         $newpost->fill($datas);
@@ -79,7 +78,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('admin.posts.edit', compact('post'));
+        $categories = Category::all();
+        return view('admin.posts.edit', compact('post', 'categories'));
     }
 
     /**
@@ -91,6 +91,7 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        $this->validationInput($request);
         $postupdate = $request->all();
         $post->update($postupdate);
         $slug = Str::slug($post->title);
@@ -117,5 +118,14 @@ class PostController extends Controller
     {
         $post->delete();
         return redirect()->route('admin.posts.index');
+    }
+
+    public function validationInput(request $request)
+    {
+        $request->validate([
+            'title' => 'required|max:255|min:5',
+            'content' => 'required|min:5',
+            'category_id' => 'nullable|exists:categories,id'
+        ]);
     }
 }

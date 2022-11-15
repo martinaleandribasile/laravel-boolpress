@@ -49810,7 +49810,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\user\Desktop\Boolean71\ESERCIZI\PHP\laravel-auth\resources\js\frontend.js */"./resources/js/frontend.js");
+module.exports = __webpack_require__(/*! C:\Users\user\Desktop\Boolean71\ESERCIZI\PHP\laravel-one-to-many\resources\js\frontend.js */"./resources/js/frontend.js");
 
 
 /***/ })
