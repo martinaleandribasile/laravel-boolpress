@@ -1958,7 +1958,7 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "container"
   }, [_c("div", {
-    staticClass: "row justify-content-center"
+    staticClass: "row justify-content-center my-4"
   }, [_c("div", {
     staticClass: "col-md-8"
   }, [_c("div", {

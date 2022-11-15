@@ -20,7 +20,7 @@
                 <div class="d-flex justify-content-center align-items-center" style="column-gap: 20px">
                     <label class="" for="content">Content:</label>
                     <textarea type="text" name="content" minlength="1" rows="30" cols="70" class="p-4">{{ old('title', '') }}</textarea>
-                    @error('title')
+                    @error('content')
                         <div class='alert alert-danger p-1 ms-3 mb-0'>
                             {{ __($message) }}
                             <!-- i __ sono per aggiungere le traduzioni per le lingue-->
