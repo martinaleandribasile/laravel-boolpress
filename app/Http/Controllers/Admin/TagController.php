@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Category;
+use App\Tag;
 use App\Post;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 
-class CategoryController extends Controller
+class TagController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,9 +17,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        $posts = Post::all();
-        return view('admin.categories.index', compact('categories', 'posts'));
+        $tags = Tag::all();
+        return view('admin.tags.index', compact('tags'));
     }
 
     /**
@@ -29,7 +28,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        return view('admin.tags.create');
     }
 
     /**
@@ -40,11 +39,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validateCat($request);
-        $inputcat = $request->all();
-        $newcat = new Category();
-        $newcat->fill($inputcat);
-        $slug = Str::slug($newcat->name);
+        $this->validateTag($request);
+        $inputTag = $request->all();
+        $newTag = new Tag();
+        $newTag->fill($inputTag);
+        $slug = Str::slug($newTag->name);
         $slug_base = $slug;
         $existingslug = Post::where('slug', $slug)->first();
         $counter = 1;
@@ -53,47 +52,52 @@ class CategoryController extends Controller
             $existingslug = Post::where('slug', $slug)->first();
             $counter++;
         }
-        $newcat->slug = $slug;
-        $newcat->save();
-        return redirect()->route('admin.categories.index');
+        $newTag->slug = $slug;
+        $newTag->save();
+        return redirect()->route('admin.tags.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show(Tag $tag)
     {
         $posts = Post::all();
-        return view('admin.categories.show', compact('category', 'posts'));
+        $postsRelated = [];
+        foreach ($posts as $post) {
+            if ($post->tags->contains($tag))
+                $postsRelated[] = $post;
+        }
+        return view('admin.tags.show', compact(['tag', 'postsRelated']));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(Tag $tag)
     {
-        return view('admin.categories.edit', compact('category'));
+        return view('admin.tags.edit', compact('tag'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Tag $tag)
     {
-        $this->validateCat($request);
-        $catupdate = $request->all();
-        $category->update($catupdate);
-        $slug = Str::slug($category->name);
+        $this->validateTag($request);
+        $inputTag = $request->all();
+        $tag->update($inputTag);
+        $slug = Str::slug($tag->name);
         $slug_base = $slug;
         $existingslug = Post::where('slug', $slug)->first();
         $counter = 1;
@@ -102,24 +106,25 @@ class CategoryController extends Controller
             $existingslug = Post::where('slug', $slug)->first();
             $counter++;
         }
-        $category->slug = $slug;
-        $category->save();
-        return redirect()->route('admin.categories.show', $category->id);
+        $tag->slug = $slug;
+        $tag->save();
+        return redirect()->route('admin.tags.show', $tag->id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Tag $tag, Post $post)
     {
-        $category->delete();
-        return redirect()->route('admin.categories.index');
+        $tag->posts()->sync([]);
+        $tag->delete();
+        return redirect()->route('admin.tags.index');
     }
 
-    public function validateCat(Request $request)
+    public function validateTag(Request $request)
     {
         $request->validate([
             'name' => 'required|min:3|',

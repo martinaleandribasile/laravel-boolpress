@@ -14,7 +14,7 @@ class CategorySeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        $categories = ['Recensioni', 'Live events', 'Reportage', 'Interviste', 'Strumenti', 'DAW', 'Altro'];
+        $categories = ['Recensioni', 'Mare', 'Ristoranti', 'Interviste', 'Montagna', 'Avventure', 'Altro'];
         foreach ($categories as $model) {
             $category = new Category();
             $category->name = $model;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Post;
 use App\Category;
+use App\Tag;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
@@ -30,7 +31,8 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.posts.create', compact('categories'));
+        $tags = Tag::all();
+        return view('admin.posts.create', compact(['categories', 'tags']));
     }
 
     /**
@@ -45,6 +47,7 @@ class PostController extends Controller
         $datas = $request->all();
         $newpost = new Post();
         $newpost->fill($datas);
+
         $slug = Str::slug($newpost->title);
         $slug_base = $slug;
         $existingslug = Post::where('slug', $slug)->first();
@@ -56,6 +59,9 @@ class PostController extends Controller
         }
         $newpost->slug = $slug;
         $newpost->save();
+        if (array_key_exists('tags', $datas)) {
+            $newpost->tags()->sync($datas['tags']);
+        }
         return redirect()->route('admin.posts.show', $newpost->id);
     }
 
@@ -79,7 +85,8 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $categories = Category::all();
-        return view('admin.posts.edit', compact('post', 'categories'));
+        $tags = Tag::all();
+        return view('admin.posts.edit', compact(['post', 'categories', 'tags']));
     }
 
     /**
@@ -94,6 +101,11 @@ class PostController extends Controller
         $this->validationInput($request);
         $postupdate = $request->all();
         $post->update($postupdate);
+        if (array_key_exists('tags', $postupdate)) {
+            $post->tags()->sync($postupdate['tags']);
+        } else {
+            $post->tags()->sync([]);
+        }
         $slug = Str::slug($post->title);
         $slug_base = $slug;
         $existingslug = Post::where('slug', $slug)->first();
@@ -116,6 +128,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        $post->tags()->sync([]);  // tolgo prima tutte le relazioni nella tabella ponte riferite al post che vado a cancellare
         $post->delete();
         return redirect()->route('admin.posts.index');
     }
@@ -125,7 +138,8 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|max:255|min:5',
             'content' => 'required|min:5',
-            'category_id' => 'nullable|exists:categories,id'
+            'category_id' => 'nullable|exists:categories,id',
+            'tags' => 'exists:tags,id'
         ]);
     }
 }

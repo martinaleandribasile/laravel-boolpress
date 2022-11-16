@@ -29,30 +29,68 @@
                     @enderror
 
                 </div>
-            </div>
-            <div class="d-flex justify-content-center align-items-center" style="column-gap: 20px">
-                <label for="category_id">Categoria:</label>
-                <select name="category_id" id="">
-                    <option value="">Non definita</option>
-                    <!--se voglio una cat non definita-->
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}"
-                            {{ $category->id == old('category_id', $category->name) ? 'selected' : '' }}>
-                            {{ $category->name }}</option>
-                    @endforeach
-                </select>
-                @error('category_id')
-                    <div class='alert alert-danger p-1 ms-3 mb-0'>
-                        {{ __($message) }}
-                        <!-- i __ sono per aggiungere le traduzioni per le lingue-->
+
+                <div class="d-flex justify-content-center align-items-center" style="column-gap: 20px">
+                    <label for="category_id">Categoria:</label>
+                    <select name="category_id" id="">
+                        <option value="">Non definita</option>
+                        <!--se voglio una cat non definita-->
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}"
+                                {{ $category->id == old('category_id', $category->name) ? 'selected' : '' }}>
+                                {{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <div class='alert alert-danger p-1 ms-3 mb-0'>
+                            {{ __($message) }}
+                            <!-- i __ sono per aggiungere le traduzioni per le lingue-->
+                        </div>
+                    @enderror
+
+                </div>
+
+
+                @if ($errors->any())
+                    <div class="d-flex justify-content-center align-items-center" style="column-gap: 80px"
+                        @error('tags') class="is-invalid" @enderror>
+                        <p class="m-0 p-0">Tags:</p>
+                        <div class="d-flex justify-content-center align-items-center" style="column-gap: 80px">
+                            @foreach ($tags as $tag)
+                                <div class="d-flex" style="column-gap:10px">
+                                    <label class="p-0 m-0" for="tags[]">{{ $tag->name }}</label>
+                                    <input type="checkbox" name="tags[]" value="{{ $tag->id }}"
+                                        {{ in_array($tag->id, old('tags', [])) ? 'checked' : '' }} />
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
-                @enderror
+                @else
+                    <div class="d-flex justify-content-center align-items-center" style="column-gap: 80px">
+                        <p class="m-0 p-0 me-5">Tags:</p>
+                        <div class="d-flex" style="column-gap: 40px">
+                            @foreach ($tags as $tag)
+                                <div class="d-flex" style="column-gap:10px">
+                                    <label class="p-0 m-0" for="tags[]">{{ $tag->name }}</label>
+                                    <input type="checkbox" name="tags[]" value="{{ $tag->id }}"
+                                        {{ $post->tags->contains($tag) ? 'checked' : '' }} />
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @error('tags')
+                        <div class='alert alert-danger p-1 ms-3 mb-0'>
+                            {{ __($message) }}
+                            <!-- i __ sono per aggiungere le traduzioni per le lingue-->
+                        </div>
+                    @enderror
+                @endif
 
             </div>
-
-            <div class=" pt-5 d-flex justify-content-center">
-                <input type="submit" class="btn btn-warning" value="Aggiorna">
-            </div>
-        </form>
+    </div>
+    <div class=" pt-5 d-flex justify-content-center">
+        <input type="submit" class="btn btn-warning" value="Aggiorna">
+    </div>
+    </form>
     </div>
 @endsection
