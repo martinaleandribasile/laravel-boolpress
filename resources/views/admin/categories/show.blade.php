@@ -16,7 +16,7 @@
         <form action="{{ route('admin.categories.destroy', $category->id) }}" method="post" onsubmit="conferma(event)">
             @csrf
             @method('delete')
-            <input class="btn btn-danger" type="submit" value="Canella Repo">
+            <input class="btn btn-danger" type="submit" value="Canella Categoria">
         </form>
     </div>
 @endsection
