@@ -10,7 +10,7 @@
         <ul class="mt-3">
             @foreach ($posts as $post)
                 @if ($post->category_id == $category->id)
-                    <li><a href="{{ route('admin.posts.show', $post->slug) }}">{{ $post->title }}</a></li>
+                    <li><a href="{{ route('admin.posts.show', $post->id) }}">{{ $post->title }}</a></li>
                 @endif
             @endforeach
 

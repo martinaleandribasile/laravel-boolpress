@@ -21,7 +21,7 @@
             <div class="d-flex">
                 <h3>{{ $post->category_id == null ? 'Non Assegnata' : $post->category->name }}</h3>
                 @if ($post->category_id != null)
-                    <a href="{{ route('admin.categories.show', $post->category->id) }}">info</a>
+                    <a href="{{ route('admin.categories.show', $post->category->slug) }}">info</a>
                 @endif
             </div>
             <!--grazie al modello le tabelle sono collegate-->
