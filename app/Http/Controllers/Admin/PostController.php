@@ -116,7 +116,6 @@ class PostController extends Controller
             $counter++;
         }
         $post->slug = $slug;
-        $post->save();
         return redirect()->route('admin.posts.show', $post->id);
     }
 
