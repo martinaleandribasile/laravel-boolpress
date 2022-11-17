@@ -103,6 +103,7 @@ class CategoryController extends Controller
             $counter++;
         }
         $category->slug = $slug;
+        $category->save();
         return redirect()->route('admin.categories.show', $category->id);
     }
 
