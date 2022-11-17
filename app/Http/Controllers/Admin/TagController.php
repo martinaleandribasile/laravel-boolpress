@@ -53,6 +53,7 @@ class TagController extends Controller
             $counter++;
         }
         $newTag->slug = $slug;
+        $newTag->save();
         return redirect()->route('admin.tags.index');
     }
 
