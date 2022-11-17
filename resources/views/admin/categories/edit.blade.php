@@ -4,7 +4,7 @@
     <div class="d-flex flex-column align-items-center">
         <h1>Modifica la Categoria</h1>
         <div class="mt-5" style="width: 300px">
-            <form action="{{ route('admin.categories.update', $category->id) }}" class="d-flex flex-column"
+            <form action="{{ route('admin.categories.update', $category->slug) }}" class="d-flex flex-column"
                 style="row-gap: 20px" method="post">
                 @csrf
                 @method('put')

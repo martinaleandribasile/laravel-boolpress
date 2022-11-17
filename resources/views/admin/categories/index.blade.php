@@ -5,7 +5,7 @@
         <h1 class="text-success">Le mie categorie</h1>
         @foreach ($categories as $category)
             <div class="col-12 py-4">
-                <a href="{{ route('admin.categories.show', $category->id) }}">{{ $category->name }}</a>
+                <a href="{{ route('admin.categories.show', $category->slug) }}">{{ $category->name }}</a>
 
             </div>
         @endforeach
