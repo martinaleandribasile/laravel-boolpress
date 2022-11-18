@@ -44,15 +44,7 @@ class CategoryController extends Controller
         $inputcat = $request->all();
         $newcat = new Category();
         $newcat->fill($inputcat);
-        $slug = Str::slug($newcat->name);
-        $slug_base = $slug;
-        $existingslug = Post::where('slug', $slug)->first();
-        $counter = 1;
-        while ($existingslug) {
-            $slug = $slug_base . '_' . $counter;
-            $existingslug = Post::where('slug', $slug)->first();
-            $counter++;
-        }
+        $slug = $this->getSlug($newcat->name);
         $newcat->slug = $slug;
         $newcat->save();
         return redirect()->route('admin.categories.index');
@@ -92,18 +84,9 @@ class CategoryController extends Controller
     {
         $this->validateCat($request);
         $catupdate = $request->all();
+        $slug = $this->getSlug($catupdate['name']);
+        $catupdate['slug'] = $slug;
         $category->update($catupdate);
-        $slug = Str::slug($category->name);
-        $slug_base = $slug;
-        $existingslug = Post::where('slug', $slug)->first();
-        $counter = 1;
-        while ($existingslug) {
-            $slug = $slug_base . '_' . $counter;
-            $existingslug = Post::where('slug', $slug)->first();
-            $counter++;
-        }
-        $category->slug = $slug;
-        $category->save();
         return redirect()->route('admin.categories.show', $category->slug);
     }
 
@@ -124,5 +107,19 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|min:3|',
         ]);
+    }
+    private function getSlug($title)
+    {
+        $slug = Str::slug($title);
+        $slug_base = $slug;
+
+        $existingPost = Post::where('slug', $slug)->first();
+        $counter = 1;
+        while ($existingPost) {
+            $slug = $slug_base . '_' . $counter;
+            $counter++;
+            $existingPost = Post::where('slug', $slug)->first();
+        }
+        return $slug;
     }
 }

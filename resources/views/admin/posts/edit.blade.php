@@ -2,7 +2,7 @@
 @section('content')
     <div class="">
         <h1 class="text-center text-uppercase text-warning pb-5">Aggiorna il Post</h1>
-        <form action="{{ route('admin.posts.update', $post->id) }}" method="post">
+        <form enctype="multipart/form-data" action="{{ route('admin.posts.update', $post->id) }}" method="post">
             @csrf
             @method('put')
             <div class="d-flex flex-column " style="row-gap: 50px">
@@ -31,13 +31,27 @@
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center" style="column-gap: 20px">
+                    @if ($post->cover_path)
+                        <img src="{{ asset('storage/' . $post->cover_path) }}" alt="{{ $post->title }}">
+                    @endif
+                    <label for="image">Poster:</label>
+                    <input type="file" name="image">
+                    @error('image')
+                        <div class='alert alert-danger p-1 ms-3 mb-0'>
+                            {{ __($message) }}
+                            <!-- i __ sono per aggiungere le traduzioni per le lingue-->
+                        </div>
+                    @enderror
+                </div>
+
+                <div class="d-flex justify-content-center align-items-center" style="column-gap: 20px">
                     <label for="category_id">Categoria:</label>
                     <select name="category_id" id="">
                         <option value="">Non definita</option>
                         <!--se voglio una cat non definita-->
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}"
-                                {{ $category->id == old('category_id', $category->name) ? 'selected' : '' }}>
+                                {{ $category->id == old('category_id', $post->category->id) ? 'selected' : '' }}>
                                 {{ $category->name }}</option>
                         @endforeach
                     </select>

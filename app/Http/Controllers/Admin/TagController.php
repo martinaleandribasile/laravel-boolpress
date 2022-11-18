@@ -43,15 +43,7 @@ class TagController extends Controller
         $inputTag = $request->all();
         $newTag = new Tag();
         $newTag->fill($inputTag);
-        $slug = Str::slug($newTag->name);
-        $slug_base = $slug;
-        $existingslug = Post::where('slug', $slug)->first();
-        $counter = 1;
-        while ($existingslug) {
-            $slug = $slug_base . '_' . $counter;
-            $existingslug = Post::where('slug', $slug)->first();
-            $counter++;
-        }
+        $slug = $this->getSlug($newTag->name);
         $newTag->slug = $slug;
         $newTag->save();
         return redirect()->route('admin.tags.index');
@@ -96,18 +88,9 @@ class TagController extends Controller
     {
         $this->validateTag($request);
         $inputTag = $request->all();
+        $slug = $this->getSlug($inputTag['name']);
+        $inputTag['slug'] = $slug;
         $tag->update($inputTag);
-        $slug = Str::slug($tag->name);
-        $slug_base = $slug;
-        $existingslug = Post::where('slug', $slug)->first();
-        $counter = 1;
-        while ($existingslug) {
-            $slug = $slug_base . '_' . $counter;
-            $existingslug = Post::where('slug', $slug)->first();
-            $counter++;
-        }
-        $tag->slug = $slug;
-        $tag->save();
         return redirect()->route('admin.tags.show', $tag->id);
     }
 
@@ -129,5 +112,20 @@ class TagController extends Controller
         $request->validate([
             'name' => 'required|min:3|',
         ]);
+    }
+
+    private function getSlug($title)
+    {
+        $slug = Str::slug($title);
+        $slug_base = $slug;
+
+        $existingPost = Post::where('slug', $slug)->first();
+        $counter = 1;
+        while ($existingPost) {
+            $slug = $slug_base . '_' . $counter;
+            $counter++;
+            $existingPost = Post::where('slug', $slug)->first();
+        }
+        return $slug;
     }
 }

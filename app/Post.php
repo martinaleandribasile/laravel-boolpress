@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    public $fillable = ['title', 'content', 'slug', 'category_id'];
+    public $fillable = ['title', 'content', 'slug', 'category_id', 'cover_path'];
 
     public function category()
     {

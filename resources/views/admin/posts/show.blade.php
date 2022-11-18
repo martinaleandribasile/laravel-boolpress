@@ -14,6 +14,20 @@
             <h2 class="text-success">Slug:</h2>
             <h3>{{ $post->slug }}</h3>
         </div>
+
+        @if ($post->cover_path)
+            <div class="col-6 py-2">
+                <h2 class="text-success">Cover:</h2>
+                <img src="{{ asset('storage/' . $post->cover_path) }}" alt="{{ $post->title }}">
+            </div>
+        @else
+            <div class="col-6 py-2">
+                <h2 class="text-success">Cover:</h2>
+                <p>Non ci sono cover associate</p>
+            </div>
+        @endif
+
+
         <div class="col-12 py-2">
             <a class="text-primary" href="{{ route('admin.categories.index') }}" style="text-decoration: underline">
                 <h2>Category:</h2>

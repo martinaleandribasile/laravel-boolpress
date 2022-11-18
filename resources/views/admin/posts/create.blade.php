@@ -4,7 +4,7 @@
         <h1 class="text-center text-uppercase text-success pb-5">Crea un nuovo Post</h1>
 
 
-        <form action="{{ route('admin.posts.store') }}" method="post">
+        <form action="{{ route('admin.posts.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="d-flex flex-column " style="row-gap: 50px">
                 <div class="d-flex justify-content-center align-items-center" style="column-gap: 20px">
@@ -31,6 +31,17 @@
                         </div>
                     @enderror
 
+                </div>
+
+                <div class="d-flex justify-content-center align-items-center" style="column-gap: 20px">
+                    <label for="image">Poster:</label>
+                    <input type="file" name="image">
+                    @error('image')
+                        <div class='alert alert-danger p-1 ms-3 mb-0'>
+                            {{ __($message) }}
+                            <!-- i __ sono per aggiungere le traduzioni per le lingue-->
+                        </div>
+                    @enderror
                 </div>
 
 

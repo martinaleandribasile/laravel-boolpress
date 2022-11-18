@@ -7,6 +7,7 @@ use App\Category;
 use App\Tag;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 
@@ -45,20 +46,20 @@ class PostController extends Controller
     {
         $this->validationInput($request);
         $datas = $request->all();
+
+        if (array_key_exists('image', $datas)) {
+            $cover_path = Storage::put('post_covers', $datas['image']);
+            $datas['cover_path'] = $cover_path;
+        }
+
+
         $newpost = new Post();
         $newpost->fill($datas);
 
-        $slug = Str::slug($newpost->title);
-        $slug_base = $slug;
-        $existingslug = Post::where('slug', $slug)->first();
-        $counter = 1;
-        while ($existingslug) {
-            $slug = $slug_base . '_' . $counter;
-            $existingslug = Post::where('slug', $slug)->first();
-            $counter++;
-        }
+        $slug = $this->getSlug($newpost->title);
         $newpost->slug = $slug;
         $newpost->save();
+
         if (array_key_exists('tags', $datas)) {
             $newpost->tags()->sync($datas['tags']);
         }
@@ -100,22 +101,28 @@ class PostController extends Controller
     {
         $this->validationInput($request);
         $postupdate = $request->all();
-        $post->update($postupdate);
+
+        if ($post->title != $postupdate['title']) {
+            $slug = $this->getSlug($postupdate['title']);
+            $postupdate['slug'] = $slug;
+        }
+
+        if (array_key_exists('image', $postupdate)) {
+            if ($post->cover_path) {
+                Storage::delete($post->cover_path);
+            }
+            $cover_path = Storage::put('post_covers', $postupdate['image']);
+            $postupdate['cover_path'] = $cover_path;
+        }
+
         if (array_key_exists('tags', $postupdate)) {
             $post->tags()->sync($postupdate['tags']);
         } else {
             $post->tags()->sync([]);
         }
-        $slug = Str::slug($post->title);
-        $slug_base = $slug;
-        $existingslug = Post::where('slug', $slug)->first();
-        $counter = 1;
-        while ($existingslug) {
-            $slug = $slug_base . '_' . $counter;
-            $existingslug = Post::where('slug', $slug)->first();
-            $counter++;
-        }
-        $post->slug = $slug;
+
+        $post->update($postupdate);
+
         return redirect()->route('admin.posts.show', $post->id);
     }
 
@@ -127,6 +134,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        if ($post->cover_path) {
+            Storage::delete($post->cover_path);
+        }
         $post->tags()->sync([]);  // tolgo prima tutte le relazioni nella tabella ponte riferite al post che vado a cancellare
         $post->delete();
         return redirect()->route('admin.posts.index');
@@ -138,7 +148,23 @@ class PostController extends Controller
             'title' => 'required|max:255|min:5',
             'content' => 'required|min:5',
             'category_id' => 'nullable|exists:categories,id',
-            'tags' => 'exists:tags,id'
+            'tags' => 'exists:tags,id',
+            'image' => 'nullable|image|max:1024'
         ]);
+    }
+
+    private function getSlug($title)
+    {
+        $slug = Str::slug($title);
+        $slug_base = $slug;
+
+        $existingPost = Post::where('slug', $slug)->first();
+        $counter = 1;
+        while ($existingPost) {
+            $slug = $slug_base . '_' . $counter;
+            $counter++;
+            $existingPost = Post::where('slug', $slug)->first();
+        }
+        return $slug;
     }
 }
