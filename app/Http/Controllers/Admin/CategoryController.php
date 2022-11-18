@@ -18,8 +18,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        $posts = Post::all();
-        return view('admin.categories.index', compact('categories', 'posts'));
+        return view('admin.categories.index', compact('categories'));
     }
 
     /**
@@ -113,12 +112,12 @@ class CategoryController extends Controller
         $slug = Str::slug($title);
         $slug_base = $slug;
 
-        $existingPost = Post::where('slug', $slug)->first();
+        $existingPost = Category::where('slug', $slug)->first();
         $counter = 1;
         while ($existingPost) {
             $slug = $slug_base . '_' . $counter;
             $counter++;
-            $existingPost = Post::where('slug', $slug)->first();
+            $existingPost = Category::where('slug', $slug)->first();
         }
         return $slug;
     }
