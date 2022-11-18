@@ -47,11 +47,12 @@
                 <div class="d-flex justify-content-center align-items-center" style="column-gap: 20px">
                     <label for="category_id">Categoria:</label>
                     <select name="category_id" id="">
-                        <option value="">Non definita</option>
+                        <option value="" @if ($post->category_id == null) selected @endif>Non definita
+                        </option>
                         <!--se voglio una cat non definita-->
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}"
-                                {{ $category->id == old('category_id', $post->category->id) ? 'selected' : '' }}>
+                                @if ($post->category_id == !null) {{ $category->id == old('category_id', $post->category->id) ? 'selected' : '' }} @endif>
                                 {{ $category->name }}</option>
                         @endforeach
                     </select>
