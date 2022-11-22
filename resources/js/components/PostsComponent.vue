@@ -8,7 +8,7 @@
             <IndexPostsComponent v-if="!dettail" @requestPage="loadPage" :postsobject='posts' @showPost='showDettails'/>
         </div>
         <div v-else-if="dettail" class="p-5 d-flex flex-column">
-            <DettailPostComponent :post='dettail'/>
+            <DettailPostComponent :post='dettail' :categories='categories' />
             <button class="btn btn-danger my-5" @click="dettail = undefined">Back to List</button>
         </div>
         <div v-else class="d-flex flex-column align-items-center">
@@ -34,6 +34,7 @@ import DettailPostComponent from './DettailComponent.vue'
         errorMessage:'',
         loading: true,
         dettail: undefined,
+        categories:undefined,
       }
   },
   methods:{
@@ -59,10 +60,23 @@ import DettailPostComponent from './DettailComponent.vue'
             console.log(e);
             this.loading = false;
         })
+    },
+    takeCategory(){
+        axios.get('api/categories').then((response)=>{
+            this.categories= response.data.results
+            console.log(this.categories)
+            this.loading=false;
+        }).catch(e=>{
+            console.log(e);
+            this.loading = false;
+        })
+
     }
+
   },
   mounted(){
       this.loadPage('api/posts')
+      this.takeCategory()
   }
 
   }

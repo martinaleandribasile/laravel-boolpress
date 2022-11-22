@@ -9,9 +9,11 @@
             <h2 class="text-info">Content:</h2>
             <h3>{{post.content}}</h3>
        </div>
-       <div v-if="post.category_id != undefined">
+       <div>
             <h2 class="text-info">Categoria:</h2>
-            <h3 >{{post.category_id}}</h3>
+            <div v-for="category in categories" :key="category.id">
+                <h3 v-if="category.id == post.category_id">{{category.name}}</h3>
+            </div>
        </div>
   </div>
 </template>
@@ -20,7 +22,8 @@
 export default {
 name: 'DettailPostComponent',
 props:{
-    post:Object
+    post:Object,
+    categories:Array
 }
 }
 </script>
