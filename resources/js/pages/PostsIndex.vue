@@ -7,10 +7,6 @@
             <h1 class="pb-4">I miei Post</h1>
             <IndexPostsComponent v-if="!dettail" @requestPage="loadPage" :postsobject='posts' @showPost='showDettails'/>
         </div>
-        <div v-else-if="dettail" class="p-5 d-flex flex-column">
-            <DettailPostComponent :post='dettail' :categories='categories' />
-            <button class="btn btn-danger my-5" @click="dettail = undefined">Back to List</button>
-        </div>
         <div v-else class="d-flex flex-column align-items-center">
             Al momento non sono presenti file da visualizzare
         </div>
@@ -19,13 +15,12 @@
 
   <script>
 
-import IndexPostsComponent from './IndexPostsComponent.vue'
-import DettailPostComponent from './DettailComponent.vue'
+    import IndexPostsComponent from '../components/IndexPostsComponent.vue'
   export default {
   name:'PostsComponent',
   components:{
     IndexPostsComponent,
-    DettailPostComponent
+
   },
   data(){
      return {
@@ -47,44 +42,18 @@ import DettailPostComponent from './DettailComponent.vue'
             this.errorMessage = data.error
         }
         this.loading = false
+      }).catch((e)=>{
+        console.log(e);
       })
     },
     showDettails(id){
-        this.loading=true;
-        axios.get('/api/posts/' +id)
-        .then(response=>{
-            this.dettail = response.data.success? response.data.results : undefined;
-            this.loading=false;
-            console.log(this.dettail)
-        }).catch(e=>{
-            console.log(e);
-            this.loading = false;
-        })
+        console.log(id)
     },
-    takeCategory(){
-        axios.get('api/categories').then((response)=>{
-            this.categories= response.data.results
-            console.log(this.categories)
-            this.loading=false;
-        }).catch(e=>{
-            console.log(e);
-            this.loading = false;
-        })
-
-    }
 
   },
   mounted(){
-      this.loadPage('api/posts')
-      this.takeCategory()
+        const page = this.$route.query.page? this.$route.query.page : 1;
+        this.loadPage('api/posts?page=' + page)
   }
-
   }
   </script>
-
-  <style lang="scss" scoped>
-        button{
-            width: 300px;
-        }
-  </style>
-
