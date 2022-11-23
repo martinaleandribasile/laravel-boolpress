@@ -1,7 +1,7 @@
 <template>
     <div>
         <NavComponent :nav='nav'/>
-        <router-view></router-view> <!--va a visualizzarmi postcomponent-->
+        <router-view></router-view> <!--va a visualizzarmi PostsIndex in quanto e' la pagina collegata al path ? -->
     </div>
     </template>
 

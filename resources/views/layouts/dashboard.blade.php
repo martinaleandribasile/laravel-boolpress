@@ -25,9 +25,10 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-dark flex-md-nowrap p-0">
         <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Boolpress</a>
         <ul class="navbar-nav px-3 ml-auto">
+
             <li class="nav-item">
-                <a class="nav-link" href="">
-                    Visita il sito
+                <a class="nav-link" href="/">
+                    Home-Guess
                 </a>
             </li>
             <li class="nav-item">
@@ -40,6 +41,16 @@
                     @csrf
                 </form>
             </li>
+            @auth
+                <li class="nav-item text-success py-2 pl-3 d-flex">
+                    Autorizzato
+                    <p class="text-white pl-1 pr-3"> {{ Auth::user()->name }}</p>
+                </li>
+            @else
+                <li class="nav-item text-danger py-2 pr-3">
+                    Non autorizzato
+                </li>
+            @endauth
         </ul>
     </nav>
     <div class="container-fluid">

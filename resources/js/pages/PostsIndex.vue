@@ -26,7 +26,7 @@
      return {
 
         posts:undefined,
-        errorMessage:'',
+        //errorMessage:'',
         loading: true,
         dettail: undefined,
         categories:undefined,
@@ -39,7 +39,8 @@
             console.log(data.results)
             this.posts= data.results
         }else{
-            this.errorMessage = data.error
+           // this.errorMessage = data.error
+            this.$router.push({name: 'NotFound'}) // altro metodo per reindirizzare le rotte del router attraverso il nome della rotta
         }
         this.loading = false
       }).catch((e)=>{
@@ -47,13 +48,17 @@
       })
     },
     showDettails(id){
-        console.log(id)
+        this.$router.push('/posts/' +id)
     },
+    /*   CON LO SLUG
+        showDettails(slug){
+        this.$router.push('/posts/' +slug)
+    },*/
 
   },
   mounted(){
-        const page = this.$route.query.page? this.$route.query.page : 1;
-        this.loadPage('api/posts?page=' + page)
+        const page = this.$route.query.page? this.$route.query.page : 1; // cosi compiando l url vado alla pagina segnalata dopo page=
+        this.loadPage('api/posts?page=' + page) // this.$route.query.page || 1 ; altro modo per scrivere un ternario quando il valore di verifica e' anche il valore da assegnare
   }
   }
   </script>

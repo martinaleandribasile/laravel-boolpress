@@ -4,6 +4,7 @@
            <ol >
                <li class="py-4" v-for="element in posts" :key="element.id">
                    {{element.title}}
+                   <!-- @click='takeSlug(element.slug)'-->
                    <button @click="takeId(element.id)" class="btn btn-success mx-3">Dettails</button>
                </li>
            </ol>
@@ -43,7 +44,7 @@
        },
        go(url, pageNumber){
           if(url){
-           this.$router.push({path: '/posts', query: {page : pageNumber}})
+           this.$router.push({path: '/posts', query: {page : pageNumber}}) // per creare un aggiornamento visivo dell url alla pagina corrispondente a quella di paginazione dei post
            this.$emit('requestPage', url)
           }
 
