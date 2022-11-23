@@ -2128,7 +2128,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    var id = this.$route.params.id;
+    var id = this.$route.params.id; // metodo predefinito da VueRouter
     this.loadPage('api/posts/' + id);
 
     /* CON LO SLUG   const slug = this.$route.params.slug;
@@ -2475,7 +2475,14 @@ var render = function render() {
     staticClass: "text-info"
   }, [_vm._v("Content:")]), _vm._v(" "), _c("h3", [_vm._v(_vm._s(_vm.post.content))])]), _vm._v(" "), _c("div", [_c("h2", {
     staticClass: "text-info"
-  }, [_vm._v("Category:")]), _vm._v(" "), _vm.post.category ? _c("h3", [_vm._v(_vm._s(_vm.post.category.name))]) : _c("h6", [_vm._v(" Non ci sono categoria sssociate ")])]), _vm._v(" "), _c("div", [_c("h2", {
+  }, [_vm._v("Category:")]), _vm._v(" "), _vm.post.category ? _c("h3", [_vm._v(_vm._s(_vm.post.category.name))]) : _c("h6", [_vm._v(" Non ci sono categoria sssociate ")])]), _vm._v(" "), _vm.post.cover_path ? _c("div", [_c("h2", {
+    staticClass: "text-info"
+  }, [_vm._v("Cover:")]), _vm._v(" "), _c("img", {
+    attrs: {
+      src: "storage/".concat(_vm.post.cover_path),
+      alt: ""
+    }
+  })]) : _vm._e(), _vm._v(" "), _c("div", [_c("h2", {
     staticClass: "text-info"
   }, [_vm._v("Tags:")]), _vm._v(" "), _vm.post.tags.length > 0 ? _c("div", _vm._l(_vm.post.tags, function (tag) {
     return _c("div", {

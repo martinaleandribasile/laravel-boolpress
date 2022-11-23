@@ -16,6 +16,10 @@
                     <h3 v-if="post.category">{{post.category.name}}</h3>
                     <h6 v-else> Non ci sono categoria sssociate </h6>
             </div>
+            <div v-if="post.cover_path">
+                    <h2 class="text-info">Cover:</h2>
+                    <img :src="`storage/${post.cover_path}`" alt="">
+            </div>
             <div>
                 <h2 class="text-info">Tags:</h2>
                 <div v-if="post.tags.length > 0">
@@ -69,7 +73,7 @@ methods:{
     }
 },
 mounted(){
-    const id = this.$route.params.id;
+    const id = this.$route.params.id; // metodo predefinito da VueRouter
     this.loadPage('api/posts/' +id);
 
     /* CON LO SLUG   const slug = this.$route.params.slug;
